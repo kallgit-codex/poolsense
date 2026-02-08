@@ -125,11 +125,13 @@ i2cdetect -y 1
 
 ## HOW IT WORKS (THE ALGORITHM)
 
-1. **Baseline Phase (15 min)**: Pump off. Record pressure readings every 1s. Establish stable water level baseline.
-2. **Measurement Phase (1-4 hours)**: Continue recording pressure. Temperature sensor tracks water temp for evaporation compensation.
+1. **Baseline Phase (3 min)**: Pump off. Record pressure readings every 1s. Let sensor settle and establish stable water level baseline.
+2. **Measurement Phase (20 min)**: Continue recording pressure. Temperature sensor tracks water temp for evaporation compensation. 1,200+ data points captured.
 3. **Evaporation Model**: Using water temp + ambient conditions (optional weather API), calculate expected evaporation rate.
 4. **Leak Calculation**: `actual_loss - expected_evaporation = leak_rate`
 5. **Report**: Generate results — leak rate in gallons/hour, bucket test equivalent, pass/fail determination.
+
+**Why 20 minutes works**: At 1 reading/sec with 0.2mbar (2mm) resolution, even a small leak produces a statistically significant downward trend across 1,200+ samples. The commercial Leakalyzer uses the same timeframe.
 
 ### Key Thresholds
 - **< 0.5mm/hr water loss after evap correction** → No significant leak
