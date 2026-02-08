@@ -20,8 +20,8 @@ from ms5837 import MS5837
 # ─── Configuration ────────────────────────────────────────────────────
 CONFIG = {
     "SAMPLE_INTERVAL_SEC": 1,        # Read sensor every 1 second
-    "BASELINE_DURATION_MIN": 15,      # Stabilization period
-    "TEST_DURATION_MIN": 120,         # Default 2-hour test
+    "BASELINE_DURATION_MIN": 3,       # 3 min stabilization (let sensor settle)
+    "TEST_DURATION_MIN": 20,          # 20-min test like a real Leakalyzer
     "EVAP_RATE_MM_HR": 0.15,          # Default evap rate (summer, still air)
     "LEAK_THRESHOLD_MM_HR": 0.5,      # Below this = no leak
     "WEB_PORT": 8080,
@@ -477,7 +477,7 @@ def api_data():
     elapsed_str = f"{int(elapsed_min)}:{int(elapsed_min % 1 * 60):02d}"
     
     leak_rate = None
-    if session.status == "testing" and elapsed_min > 6:
+    if session.status == "testing" and elapsed_min > 2:
         leak_rate = session.calculate_leak_rate()
     
     return jsonify({
